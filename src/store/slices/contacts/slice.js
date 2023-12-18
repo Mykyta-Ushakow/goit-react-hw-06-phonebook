@@ -3,18 +3,21 @@ import { nanoid } from 'nanoid';
 
 export const contactsSlice = createSlice({
   name: 'contacts',
-  initialState: [],
+  initialState: { contacts: [] },
   reducers: {
     addContactAction: {
       prepare: newContact => {
         return { payload: { ...newContact, id: nanoid() } };
       },
       reducer: (state, action) => {
-        return [...state, action.payload];
+        return { ...state, contacts: [...state.contacts, action.payload] };
       },
     },
     removeContactAction: (state, action) => {
-      return [...state.filter(el => el.name !== action.payload)];
+      return {
+        ...state,
+        contacts: [...state.contacts.filter(el => el.name !== action.payload)],
+      };
     },
   },
 });
