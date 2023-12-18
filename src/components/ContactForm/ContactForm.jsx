@@ -1,42 +1,28 @@
-import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContactAction } from 'redux/slices/contacts/slice.js';
 
 export const ContactForm = props => {
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const contactsState = useSelector(state => state.contacts.contacts);
+  const dispatch = useDispatch();
 
   const onSubmit = e => {
     e.preventDefault();
-    props.handleSubmit({ number, name });
-    setName('');
-    setNumber('');
+
+    const name = e;
+
+    dispatch(addContactAction());
+    // props.handleSubmit({ number, name });
   };
 
-  const onType = e => {
-    const field = e.target.name;
-    const value = e.target.value;
-
-    field === 'name' ? setName(value) : setNumber(value);
-  };
+  console.log(contactsState);
 
   return (
     <form onSubmit={onSubmit}>
       <label>Name</label>
-      <input
-        type="text"
-        name="name"
-        value={name || ''}
-        onChange={onType}
-        required
-      />
+      <input type="text" name="name" required />
 
       <label>Number</label>
-      <input
-        type="tel"
-        name="number"
-        required
-        onChange={onType}
-        value={number || ''}
-      />
+      <input type="tel" name="number" required />
       <button type="submit">Add Contact</button>
     </form>
   );
