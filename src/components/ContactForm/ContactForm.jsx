@@ -1,20 +1,33 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { addContactAction } from 'redux/slices/contacts/slice.js';
+import { addContactAction } from 'store/slices/contacts/slice.js';
+import { contactsSelector } from './../../store/selectors';
 
-export const ContactForm = props => {
-  const contactsState = useSelector(state => state.contacts.contacts);
+export const ContactForm = () => {
+  const contactsState = useSelector(contactsSelector);
   const dispatch = useDispatch();
 
   const onSubmit = e => {
     e.preventDefault();
 
-    const name = e;
+    let name = e.target.name.value;
+    let number = e.target.number.value;
 
-    dispatch(addContactAction());
-    // props.handleSubmit({ number, name });
+    if (
+      contactsState.some(
+        contact => contact.name.toLowerCase() === name.toLowerCase()
+      )
+    ) {
+      alert(`${name} is already in contacts`);
+      return;
+    }
+
+    const newContact = { name, number };
+
+    dispatch(addContactAction(newContact));
+
+    e.target.name.value = '';
+    e.target.number.value = '';
   };
-
-  console.log(contactsState);
 
   return (
     <form onSubmit={onSubmit}>
